@@ -10,6 +10,6 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '5.0'
 
-  s.source_files = 'BLE', 'BLE/**/*.{h,m}'
+  s.source_files = 'BLEFramework/BLE', 'BLEFramework/BLE/**/*.{h,m}'
   s.frameworks = 'CoreBluetooth'
 end
