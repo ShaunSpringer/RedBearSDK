@@ -181,17 +181,31 @@ static int rssi = 0;
 
 - (int) findBLEPeripherals:(int) timeout
 {
+    return [self findBLEPeripherals:timeout withServiceId:@RBL_SERVICE_UUID];
+}
+
+- (int) findBLEPeripherals:(int) timeout withServiceId:(NSString *)serviceId
+{
     if (self.CM.state != CBCentralManagerStatePoweredOn)
     {
         NSLog(@"CoreBluetooth not correctly initialized !");
-        NSLog(@"State = %d (%s)\r\n", self.CM.state, [self centralManagerStateToString:self.CM.state]);
+        NSLog(@"State = %ld (%s)\r\n", self.CM.state, [self centralManagerStateToString:self.CM.state]);
         return -1;
     }
     
     [NSTimer scheduledTimerWithTimeInterval:(float)timeout target:self selector:@selector(scanTimer:) userInfo:nil repeats:NO];
     
 #if TARGET_OS_IPHONE
-    [self.CM scanForPeripheralsWithServices:[NSArray arrayWithObject:[CBUUID UUIDWithString:@RBL_SERVICE_UUID]] options:nil];
+    NSArray *services;
+    if (serviceId == nil)
+    {
+        services = nil;
+    } else
+    {
+        services = [NSArray arrayWithObject:[CBUUID UUIDWithString:serviceId]];
+    }
+    
+    [self.CM scanForPeripheralsWithServices:services options:nil];
 #else
     [self.CM scanForPeripheralsWithServices:nil options:nil]; // Start scanning
 #endif
@@ -248,6 +262,8 @@ static int rssi = 0;
     [self.CM stopScan];
     NSLog(@"Stopped Scanning");
     NSLog(@"Known peripherals : %lu", (unsigned long)[self.peripherals count]);
+    
+    [[self delegate] bleScanComplete];
     [self printKnownPeripherals];
 }
 
@@ -414,7 +430,7 @@ static int rssi = 0;
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central
 {
 #if TARGET_OS_IPHONE
-    NSLog(@"Status of CoreBluetooth central manager changed %d (%s)", central.state, [self centralManagerStateToString:central.state]);
+    NSLog(@"Status of CoreBluetooth central manager changed %ld (%s)", central.state, [self centralManagerStateToString:central.state]);
     if (self.CM.state == 5) {
         [[self delegate] bleReady];
     }
