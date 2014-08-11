@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name         = "BLEFramework"
+  s.name         = "RedBearSDK"
   s.version      = "0.0.1"
   s.summary      = "A framework for developing BLE App on various systems."
   s.homepage     = "https://github.com/RedBearLab/BLEFramework"
