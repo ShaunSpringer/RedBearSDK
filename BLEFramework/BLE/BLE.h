@@ -25,6 +25,7 @@
 -(void) bleDidDisconnect;
 -(void) bleDidUpdateRSSI:(NSNumber *) rssi;
 -(void) bleDidReceiveData:(unsigned char *) data length:(int) length;
+-(void) bleScanComplete;
 @required
 @end
 
@@ -47,6 +48,7 @@
 
 -(void) controlSetup;
 -(int) findBLEPeripherals:(int) timeout;
+-(int) findBLEPeripherals:(int) timeout withServiceId:(NSString *)serviceId;
 -(void) connectPeripheral:(CBPeripheral *)peripheral;
 
 -(UInt16) swap:(UInt16) s;
