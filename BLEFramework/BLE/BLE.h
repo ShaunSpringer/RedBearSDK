@@ -20,6 +20,7 @@
 
 @protocol BLEDelegate
 @optional
+-(void) bleReady;
 -(void) bleDidConnect;
 -(void) bleDidDisconnect;
 -(void) bleDidUpdateRSSI:(NSNumber *) rssi;
